@@ -210,6 +210,33 @@ new POVButton(m_controller, 180)
 
 `m_controller` is the name of the controller in this project. If yours has a different name, like `m_joystick`, use that instead.
 
+#### Why this looks different from the climber
+
+If you've added the [climber](https://github.com/bb-frc-workshops/iron-acres-climber) before, you'll notice its buttons are connected differently:
+
+```java
+// Climber
+new JoystickButton(m_controller, 4).whileTrue(m_climber.climbUpCommand());   // uses startEnd
+
+// Lifter
+new POVButton(m_controller, 0)
+    .onTrue(new InstantCommand(() -> m_lifter.setAngle(Lifter.kUpAngleDeg), m_lifter));
+```
+
+This is because a servo and a motor need different instructions:
+
+- **The lifter uses a servo, which holds its own position.** You tell it an angle once, and it moves there and stays there by itself. The command only has to send that one instruction, so an `InstantCommand` (a command that runs once and finishes right away) is enough. `onTrue` runs it once when the button is pressed. After that, the command is done, but the servo keeps holding the angle.
+- **The climber uses a motor, which keeps spinning until it's told to stop.** If the climber used an `InstantCommand` to set the speed, the motor would keep spinning after you let go. So the climber uses `startEnd`, which does one job when the command starts (spin the motor) and another when it ends (stop the motor). `whileTrue` keeps the command running only while the button is held, so releasing the button ends the command and stops the motor.
+
+| | Lifter (servo) | Climber (motor) |
+|---|---|---|
+| What you tell it | *Where* to go (an angle) | *How fast* to spin (a speed) |
+| What happens on its own afterwards | Stays at that angle | Keeps spinning |
+| Command | `InstantCommand`: send the angle once | `startEnd`: start spinning, then stop at the end |
+| Binding | `onTrue`: run once when pressed | `whileTrue`: run while held, end when released |
+
+A good rule to remember: if a mechanism holds itself in place once it gets there, one instruction is enough. If it keeps going until you stop it, your command must also handle stopping it.
+
 To use regular buttons instead of the D-pad, swap `POVButton` for `JoystickButton` and use a button number. On an Xbox controller, A is 1, B is 2, X is 3, Y is 4, left bumper is 5, and right bumper is 6. You'll also need `import edu.wpi.first.wpilibj2.command.button.JoystickButton;`.
 
 > **Using `CommandXboxController`?** Some projects create the controller with `new CommandXboxController(0)` instead of `new Joystick(0)`. If yours does, skip the `POVButton` import and write the bindings like this instead:
