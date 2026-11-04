@@ -4,6 +4,12 @@ Robot code for an [XRP](https://docs.wpilib.org/en/stable/docs/xrp-robot/index.h
 
 If you're new to robot programming, start here. This page covers what the robot does, how the code is organized, and how to run it and change it.
 
+<p align="center">
+  <a href="https://www.printables.com/model/1720246-xbs-high-goal-robot">
+    <img src="docs/images/high-goal-robot.jpg" alt="XRP robot with the blue 3D-printed lifter mechanism" width="600">
+  </a>
+</p>
+
 **Build the robot:** The 3D-printable parts for this robot are on Printables: [XBS High Goal Robot](https://www.printables.com/model/1720246-xbs-high-goal-robot).
 
 ---
